@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoGrab - All Video Downloader</title>
+    <meta name="description" content="Download videos from YouTube, Facebook, Instagram, TikTok, Twitter and more. Free online video downloader with HD quality support.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            width: 24px;
+            height: 24px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ad-placeholder {
+            background: #f3f4f6;
+            border: 2px dashed #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .platform-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .platform-icon:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <button onclick="showPage('home')" class="flex items-center space-x-2">
+                        <i class="fas fa-download text-3xl text-indigo-600"></i>
+                        <span class="text-2xl font-bold text-gray-900">VideoGrab</span>
+                    </button>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <button onclick="showPage('home')" class="text-gray-700 hover:text-indigo-600 font-medium transition">Home</button>
+                    <button onclick="showPage('how-it-works')" class="text-gray-700 hover:text-indigo-600 font-medium transition">How It Works</button>
+                    <button onclick="showPage('platforms')" class="text-gray-700 hover:text-indigo-600 font-medium transition">Platforms</button>
+                    <button onclick="showPage('faq')" class="text-gray-700 hover:text-indigo-600 font-medium transition">FAQ</button>
+                    <button onclick="showPage('contact')" class="text-gray-700 hover:text-indigo-600 font-medium transition">Contact</button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-indigo-600">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <button onclick="showPage('home')" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-indigo-50 rounded-md">Home</button>
+                <button onclick="showPage('how-it-works')" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-indigo-50 rounded-md">How It Works</button>
+                <button onclick="showPage('platforms')" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-indigo-50 rounded-md">Platforms</button>
+                <button onclick="showPage('faq')" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-indigo-50 rounded-md">FAQ</button>
+                <button onclick="showPage('contact')" class="block w-full text-left px-3 py-2 text-gray-700 hover:bg-indigo-50 rounded-md">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Top Banner Ad -->
+    <div class="bg-gray-100 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="ad-placeholder h-24 w-full rounded-lg text-sm">
+                <i class="fas fa-ad mr-2"></i> Top Banner Ad Space (728x90)
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="min-h-screen pb-20">
+
+        <!-- HOME PAGE -->
+        <div id="page-home" class="page-section">
+            <!-- Hero Section -->
+            <div class="gradient-bg text-white py-20 px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">Download Videos From Anywhere</h1>
+                    <p class="text-xl md:text-2xl mb-8 text-indigo-100">Fast, free & unlimited downloads from YouTube, Facebook, Instagram, TikTok and 100+ sites</p>
+                    
+                    <!-- Main Download Form -->
+                    <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 text-gray-800 max-w-3xl mx-auto transform hover:scale-[1.02] transition duration-300">
+                        <div class="flex flex-col md:flex-row gap-4 mb-4">
+                            <div class="flex-1 relative">
+                                <i class="fas fa-link absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input 
+                                    type="url" 
+                                    id="video-url" 
+                                    placeholder="Paste video link here..." 
+                                    class="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:outline-none text-lg"
+                                >
+                            </div>
+                            <button 
+                                onclick="startDownload()"
+                                class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition duration-300 flex items-center justify-center space-x-2 shadow-lg"
+                            >
+                                <i class="fas fa-download"></i>
+                                <span id="download-btn-text">Download</span>
+                                <div id="loading-spinner" class="loader hidden"></div>
+                            </button>
+                        </div>
+                        
+                        <!-- Quality Selection -->
+                        <div id="quality-options" class="hidden fade-in mt-6 border-t pt-6">
+                            <p class="text-sm font-semibold text-gray-600 mb-3">Select Quality:</p>
+                            <div class="flex flex-wrap gap-3 justify-center">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="quality" value="1080" class="hidden peer" checked>
+                                    <div class="px-4 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:bg-gray-50 transition">
+                                        <i class="fas fa-video mr-2"></i>1080p HD
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="quality" value="720" class="hidden peer">
+                                    <div class="px-4 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:bg-gray-50 transition">
+                                        <i class="fas fa-video mr-2"></i>720p
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="quality" value="480" class="hidden peer">
+                                    <div class="px-4 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:bg-gray-50 transition">
+                                        <i class="fas fa-video mr-2"></i>480p
+                                    </div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="quality" value="mp3" class="hidden peer">
+                                    <div class="px-4 py-2 rounded-lg border-2 border-gray-200 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 hover:bg-gray-50 transition">
+                                        <i class="fas fa-music mr-2"></i>MP3 Audio
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <button onclick="processDownload()" class="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition duration-300">
+                                <i class="fas fa-cloud-download-alt mr-2"></i>Start Download
+                            </button>
+                        </div>
+
+                        <!-- Result Message -->
+                        <div id="result-message" class="hidden mt-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span id="result-text">Processing your download...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Side Ad Section -->
+            <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
+                <div class="lg:w-3/4">
+                    <!-- Features -->
+                    <div class="grid md:grid-cols-3 gap-6 mb-12">
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+                            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-bolt text-2xl text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Lightning Fast</h3>
+                            <p class="text-gray-600">Download videos at maximum speed with our optimized servers.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+                            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-shield-alt text-2xl text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">100% Safe</h3>
+                            <p class="text-gray-600">No malware, no viruses. Secure HTTPS connection guaranteed.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300">
+                            <div class="w-14 h-14 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-infinity text-2xl text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Unlimited</h3>
+                            <p class="text-gray-600">No registration required. Download as many videos as you want.</p>
+                        </div>
+                    </div>
+
+                    <!-- Supported Platforms Preview -->
+                    <div class="bg-white rounded-2xl shadow-lg p-8 mb-8">
+                        <h2 class="text-3xl font-bold text-center mb-8">Supported Platforms</h2>
+                        <div class="grid grid-cols-3 md:grid-cols-6 gap-6">
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-youtube text-4xl text-red-600 mb-2"></i>
+                                <span class="text-sm font-medium">YouTube</span>
+                            </div>
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-facebook text-4xl text-blue-600 mb-2"></i>
+                                <span class="text-sm font-medium">Facebook</span>
+                            </div>
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-instagram text-4xl text-pink-600 mb-2"></i>
+                                <span class="text-sm font-medium">Instagram</span>
+                            </div>
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-tiktok text-4xl text-black mb-2"></i>
+                                <span class="text-sm font-medium">TikTok</span>
+                            </div>
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-twitter text-4xl text-blue-400 mb-2"></i>
+                                <span class="text-sm font-medium">Twitter</span>
+                            </div>
+                            <div class="platform-icon flex flex-col items-center p-4 rounded-xl hover:bg-gray-50 cursor-pointer">
+                                <i class="fab fa-vimeo text-4xl text-blue-500 mb-2"></i>
+                                <span class="text-sm font-medium">Vimeo</span>
+                            </div>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button onclick="showPage('platforms')" class="text-indigo-600 font-semibold hover:underline">
+                                View All 100+ Platforms <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar Ad -->
+                <div class="lg:w-1/4">
+                    <div class="sticky top-24 space-y-4">
+                        <div class="ad-placeholder h-64 rounded-lg text-sm">
+                            <i class="fas fa-ad mr-2"></i> Sidebar Ad (300x250)
+                        </div>
+                        <div class="ad-placeholder h-64 rounded-lg text-sm">
+                            <i class="fas fa-ad mr-2"></i> Sidebar Ad (300x250)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Native Ad Section -->
+            <div class="max-w-7xl mx-auto px-4 mb-12">
+                <div class="ad-placeholder h-48 rounded-lg text-sm w-full">
+                    <i class="fas fa-ad mr-2"></i> Native Ad Space / Article Recommendation
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW IT WORKS PAGE -->
+        <div id="page-how-it-works" class="page-section hidden max-w-6xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold text-center mb-12">How It Works</h1>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">1</div>
+                    <h3 class="text-xl font-bold mb-3">Copy Video URL</h3>
+                    <p class="text-gray-600">Go to your favorite platform and copy the link of the video you want to download.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">2</div>
+                    <h3 class="text-xl font-bold mb-3">Paste & Select</h3>
+                    <p class="text-gray-600">Paste the URL in the box above and choose your preferred quality or format.</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-indigo-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">3</div>
+                    <h3 class="text-xl font-bold mb-3">Download</h3>
+                    <p class="text-gray-600">Click download and save your video. It's that simple!</p>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-indigo-50 rounded-2xl p-8">
+                <h2 class="text-2xl font-bold mb-4">Supported Formats</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-video text-indigo-600 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold">Video Formats</h4>
+                            <p class="text-gray-600 text-sm">MP4, WEBM, MOV, AVI - Available in 1080p, 720p, 480p, 360p, 240p</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fas fa-music text-indigo-600 mt-1"></i>
+                        <div>
+                            <h4 class="font-semibold">Audio Formats</h4>
+                            <p class="text-gray-600 text-sm">MP3, M4A, AAC, WAV - High quality audio extraction up to 320kbps</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PLATFORMS PAGE -->
+        <div id="page-platforms" class="page-section hidden max-w-6xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold text-center mb-4">Supported Platforms</h1>
+            <p class="text-center text-gray-600 mb-12">We support all major video sharing platforms</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-youtube text-5xl text-red-600 mb-3"></i>
+                    <h3 class="font-bold">YouTube</h3>
+                    <p class="text-sm text-gray-500 mt-1">All qualities</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-facebook text-5xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold">Facebook</h3>
+                    <p class="text-sm text-gray-500 mt-1">Public videos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-instagram text-5xl text-pink-600 mb-3"></i>
+                    <h3 class="font-bold">Instagram</h3>
+                    <p class="text-sm text-gray-500 mt-1">Posts & Reels</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-tiktok text-5xl text-black mb-3"></i>
+                    <h3 class="font-bold">TikTok</h3>
+                    <p class="text-sm text-gray-500 mt-1">No watermark</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-twitter text-5xl text-blue-400 mb-3"></i>
+                    <h3 class="font-bold">Twitter / X</h3>
+                    <p class="text-sm text-gray-500 mt-1">All tweets</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-vimeo text-5xl text-blue-500 mb-3"></i>
+                    <h3 class="font-bold">Vimeo</h3>
+                    <p class="text-sm text-gray-500 mt-1">Public videos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-dailymotion text-5xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold">Dailymotion</h3>
+                    <p class="text-sm text-gray-500 mt-1">All videos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-reddit text-5xl text-orange-600 mb-3"></i>
+                    <h3 class="font-bold">Reddit</h3>
+                    <p class="text-sm text-gray-500 mt-1">Videos & GIFs</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-soundcloud text-5xl text-orange-500 mb-3"></i>
+                    <h3 class="font-bold">SoundCloud</h3>
+                    <p class="text-sm text-gray-500 mt-1">Audio only</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fab fa-twitch text-5xl text-purple-600 mb-3"></i>
+                    <h3 class="font-bold">Twitch</h3>
+                    <p class="text-sm text-gray-500 mt-1">Clips & VODs</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fas fa-graduation-cap text-5xl text-blue-600 mb-3"></i>
+                    <h3 class="font-bold">Coursera</h3>
+                    <p class="text-sm text-gray-500 mt-1">Course videos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center hover:shadow-xl transition">
+                    <i class="fas fa-ellipsis-h text-5xl text-gray-600 mb-3"></i>
+                    <h3 class="font-bold">100+ More</h3>
+                    <p class="text-sm text-gray-500 mt-1">And counting</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ PAGE -->
+        <div id="page-faq" class="page-section hidden max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold text-center mb-12">Frequently Asked Questions</h1>
+            
+            <div class="space-y-4">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50" onclick="toggleFaq(this)">
+                        <span>Is this service free?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 py-4 bg-gray-50 border-t text-gray-600">
+                        Yes! VideoGrab is completely free to use. We may show ads to support our servers, but downloads are unlimited and free.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50" onclick="toggleFaq(this)">
+                        <span>Is it legal to download videos?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 py-4 bg-gray-50 border-t text-gray-600">
+                        You should only download videos that you have permission to download. Respect copyright laws and the terms of service of the platforms. This tool is for personal use and videos you own or have rights to download.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50" onclick="toggleFaq(this)">
+                        <span>Do I need to install any software?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 py-4 bg-gray-50 border-t text-gray-600">
+                        No, VideoGrab works entirely in your browser. No apps, no extensions, no software installation required.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50" onclick="toggleFaq(this)">
+                        <span>Are there any download limits?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 py-4 bg-gray-50 border-t text-gray-600">
+                        No limits! Download as many videos as you want. However, very large files (>2GB) might take longer to process.
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left font-semibold flex justify-between items-center hover:bg-gray-50" onclick="toggleFaq(this)">
+                        <span>What quality options are available?</span>
+                        <i class="fas fa-chevron-down transition-transform"></i>
+                    </button>
+                    <div class="hidden px-6 py-4 bg-gray-50 border-t text-gray-600">
+                        We offer 1080p Full HD, 720p HD, 480p SD, and 360p for most videos. Audio-only MP3 downloads are also available at 128kbps or 320kbps quality.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVACY POLICY PAGE -->
+        <div id="page-privacy" class="page-section hidden max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold mb-8">Privacy Policy</h1>
+            <div class="prose text-gray-600 space-y-4">
+                <p>Last updated: January 2026</p>
+                <p>At VideoGrab, we take your privacy seriously. This Privacy Policy describes how we collect, use, and protect your information when you use our service.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Information We Collect</h2>
+                <p>We do not store the videos you download or the URLs you paste. Our servers process the download request in real-time and do not keep logs of your download history.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Cookies</h2>
+                <p>We use cookies to enhance your browsing experience and serve personalized advertisements through our ad partners.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Third-Party Services</h2>
+                <p>We use Google Analytics to understand website traffic and usage patterns. This data is anonymized.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Contact</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us through our Contact page.</p>
+            </div>
+        </div>
+
+        <!-- TERMS PAGE -->
+        <div id="page-terms" class="page-section hidden max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold mb-8">Terms of Service</h1>
+            <div class="prose text-gray-600 space-y-4">
+                <p>By using VideoGrab, you agree to these terms. Please read them carefully.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Acceptable Use</h2>
+                <p>You may use VideoGrab only for lawful purposes and in accordance with these Terms. You agree not to use VideoGrab:</p>
+                <ul class="list-disc pl-6 space-y-2">
+                    <li>To download copyrighted material without permission</li>
+                    <li>To violate the terms of service of any third-party platform</li>
+                    <li>For any commercial redistribution of downloaded content</li>
+                    <li>To attempt to interfere with the proper working of the service</li>
+                </ul>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Disclaimer</h2>
+                <p>VideoGrab is provided "as is" without warranties of any kind. We do not guarantee uninterrupted or error-free service.</p>
+                
+                <h2 class="text-2xl font-bold text-gray-800 mt-6">Changes</h2>
+                <p>We reserve the right to modify or replace these Terms at any time. Continued use of the service constitutes acceptance of the new Terms.</p>
+            </div>
+        </div>
+
+        <!-- CONTACT PAGE -->
+        <div id="page-contact" class="page-section hidden max-w-4xl mx-auto px-4 py-12">
+            <h1 class="text-4xl font-bold text-center mb-12">Contact Us</h1>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h2 class="text-2xl font-bold mb-4">Get in Touch</h2>
+                    <p class="text-gray-600 mb-6">Have questions, suggestions, or need support? We'd love to hear from you.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-envelope text-indigo-600"></i>
+                            </div>
+                            <span>support@videograb.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-indigo-600"></i>
+                            </div>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="bg-white p-6 rounded-xl shadow-lg" onsubmit="event.preventDefault(); alert('Message sent!'); this.reset();">
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                        <input type="text" required class="w-full px-4 py-2 border rounded-lg focus:border-indigo-500 focus:outline-none">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" required class="w-full px-4 py-2 border rounded-lg focus:border-indigo-500 focus:outline-none">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <textarea rows="4" required class="w-full px-4 py-2 border rounded-lg focus:border-indigo-500 focus:outline-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg hover:bg-indigo-700 transition">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fas fa-download text-2xl text-indigo-400"></i>
+                        <span class="text-xl font-bold">VideoGrab</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">The fastest and easiest way to download videos from any platform.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><button onclick="showPage('home')" class="hover:text-white transition">Home</button></li>
+                        <li><button onclick="showPage('how-it-works')" class="hover:text-white transition">How It Works</button></li>
+                        <li><button onclick="showPage('platforms')" class="hover:text-white transition">Platforms</button></li>
+                        <li><button onclick="showPage('faq')" class="hover:text-white transition">FAQ</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><button onclick="showPage('privacy')" class="hover:text-white transition">Privacy Policy</button></li>
+                        <li><button onclick="showPage('terms')" class="hover:text-white transition">Terms of Service</button></li>
+                        <li><button onclick="showPage('contact')" class="hover:text-white transition">Contact Us</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-indigo-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2026 VideoGrab. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bottom Sticky Ad -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40 p-2">
+        <div class="max-w-7xl mx-auto">
+            <div class="ad-placeholder h-16 rounded text-sm w-full relative">
+                <button onclick="this.parentElement.parentElement.style.display='none'" class="absolute right-2 top-2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+                <span><i class="fas fa-ad mr-2"></i> Sticky Bottom Ad (728x90)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Page navigation
+        function showPage(pageName) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.add('hidden'));
+            
+            // Show selected page
+            const selectedPage = document.getElementById(`page-${pageName}`);
+            if (selectedPage) {
+                selectedPage.classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }
+            
+            // Close mobile menu if open
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Download functionality
+        function startDownload() {
+            const url = document.getElementById('video-url').value;
+            const btnText = document.getElementById('download-btn-text');
+            const spinner = document.getElementById('loading-spinner');
+            const qualityOptions = document.getElementById('quality-options');
+            
+            if (!url) {
+                alert('Please enter a video URL');
+                return;
+            }
+            
+            // Show loading
+            btnText.textContent = 'Analyzing...';
+            spinner.classList.remove('hidden');
+            
+            // Simulate processing
+            setTimeout(() => {
+                btnText.textContent = 'Download';
+                spinner.classList.add('hidden');
+                qualityOptions.classList.remove('hidden');
+                qualityOptions.scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        }
+
+        function processDownload() {
+            const resultDiv = document.getElementById('result-message');
+            const resultText = document.getElementById('result-text');
+            const quality = document.querySelector('input[name="quality"]:checked').value;
+            
+            resultDiv.classList.remove('hidden');
+            resultDiv.className = 'mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-blue-800';
+            resultText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing... Preparing your download...';
+            
+            setTimeout(() => {
+                resultDiv.className = 'mt-6 p-4 bg-green-50 border border-green-200 rounded-xl text-green-800';
+                resultText.innerHTML = `<i class="fas fa-check-circle mr-2"></i> Ready! ${quality === 'mp3' ? 'MP3' : quality + 'p'} format prepared. <br><small class="text-sm mt-2 block">Note: This is a demo. In production, this would trigger the actual file download via backend API.</small>`;
+            }, 2000);
+        }
+
+        // FAQ Toggle
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('.fa-chevron-down');
+            
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Handle Enter key in URL input
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('video-url');
+            if (urlInput) {
+                urlInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        startDownload();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
